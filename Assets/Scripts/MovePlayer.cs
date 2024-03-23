@@ -4,20 +4,28 @@ using UnityEngine;
 
 public class MovePlayer : MonoBehaviour
 {
-    public float mooveSpeed;
+    public float moveSpeed;
     public Rigidbody2D rb;
-    private Vector3 velocity = Vector3.zero;
+    private Vector2 movement;
+
+    void Start()
+    {
+        if (rb == null)
+        {
+            rb = GetComponent<Rigidbody2D>();
+        }
+    }
 
     void FixedUpdate()
     {
-        float horizontal = Input.GetAxis("Horizontal") * mooveSpeed * Time.deltaTime;
-
-        MovePlayerCharacter(horizontal);
+        float horizontal = Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime;
+        float vertical = Input.GetAxis("Vertical") * moveSpeed * Time.fixedDeltaTime;
+        movement = new Vector2(horizontal, vertical);
+        MovePlayerCharacter();
     }
 
-    void MovePlayerCharacter(float _horizontal)
+    void MovePlayerCharacter()
     {
-        Vector3 targetVelocity = new Vector2(_horizontal, rb.velocity.y);
-        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, .05f);
+        rb.velocity = movement;
     }
 }
